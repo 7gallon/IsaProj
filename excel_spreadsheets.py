@@ -5,6 +5,13 @@ import sys
 import programs_code
 
 
+def unwantsignsremove(strng=''):
+    removethose = '().,-_*'
+    for x in removethose:
+        strng = strng.replace(x, ' ')
+    return strng
+
+
 def xl_spreadsheets(filename):
     wb = xl.load_workbook(filename, read_only=False)
     sheet = wb['Лист1']
@@ -84,7 +91,10 @@ def epl2signal_list(filename):
             new_list_row += 1
             #copy row with signal number field if it's not blank
             new_signum_cell.value = epl_signum_cell.value
-            new_signame_cell.value = epl_signame_cell.value
+            if epl_signame_cell.value is not None:
+                new_signame_cell.value = unwantsignsremove(epl_signame_cell.value)
+            else:
+                new_signame_cell.value = epl_signame_cell.value
             new_plcmodule_cell.value = f'[{epl_plcmodule_cell.value}]'
             #printing comment brackets for the signal list strings
             open_commentbracket_cell.value = f'(*'
@@ -179,11 +189,12 @@ def epl2stf_signal_list(filename):
 
 
 # xl_spreadsheets('transactions.xlsx')
-#epl2signal_list(sys.argv[1])      need to find out how to transfer variable amount of arguments
+epl2signal_list(sys.argv[1])      # need to find out how to transfer variable amount of arguments
 
 
-epl2stf_signal_list(sys.argv[1])
+#epl2stf_signal_list(sys.argv[1])
 
+# print(unwantsignsremove('f,s(f.e)f*e-f_k'))
 
 
 
